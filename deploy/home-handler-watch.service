@@ -1,0 +1,14 @@
+[Unit]
+Description=House agent watchers (drop 1: read-only)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/home-handler
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 -m home_handler watch
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

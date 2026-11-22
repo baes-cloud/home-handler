@@ -1,0 +1,15 @@
+[Unit]
+Description=House agent page for agent.example.com (reached from outside only through a Cloudflare Tunnel + Access)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/home-handler
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=%h/.config/home_handler/web.env
+ExecStart=/usr/bin/python3 -m home_handler web --port 8790 --allow 192.168.1.10 --aud ${ACCESS_AUD}
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

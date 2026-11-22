@@ -1,0 +1,73 @@
+{
+ "generated": "2026-11-21T10:40:08+11:00",
+ "duration_s": 6.8,
+ "hosts": {
+  "agent-host": {
+   "hostname": "agent-host",
+   "mem_pct": 49,
+   "disk_root_pct": 68,
+   "disk_root_free_gb": 67
+  },
+  "failover-host": {
+   "hostname": "failover-host",
+   "mem_pct": 31,
+   "disk_root_pct": 85,
+   "disk_root_free_gb": 210,
+   "failover_blips_24h": 4,
+   "failover_last": "primary healthy again after 62s",
+   "nas_backup": "success|2026-11-21T03:37:00+11:00"
+  },
+  "nas": {
+   "mem_pct": 41,
+   "disks": [
+    {
+     "mount": "/mnt/disk1",
+     "size": 11998001573888,
+     "used": 10554079555584,
+     "avail": 1443922018304
+    },
+    {
+     "mount": "/mnt/disk2",
+     "size": 11998185066496,
+     "used": 10473182511104,
+     "avail": 1525002555392
+    },
+    {
+     "mount": "/mnt/cache",
+     "size": 499862614016,
+     "used": 151756406784,
+     "avail": 348106207232
+    },
+    {
+     "mount": "/mnt/user",
+     "size": 23996186640384,
+     "used": 21027262066688,
+     "avail": 2968924573696
+    }
+   ]
+  },
+  "pi": {
+   "hostname": "raspberrypi",
+   "mem_pct": 23,
+   "disk_root_pct": 14,
+   "disk_root_free_gb": 102
+  }
+ },
+ "ha": {
+  "core": {
+   "version": "2026.11.2",
+   "latest": "2026.11.2"
+  },
+  "os": {
+   "version": "18.5",
+   "latest": "18.5"
+  },
+  "supervisor": {
+   "version": "2026.11.0",
+   "latest": "2026.11.0"
+  },
+  "last_backup": "2026-11-20T18:04:16.008861+00:00",
+  "backup_count": 3,
+  "disk_pct": 30
+ }
+}

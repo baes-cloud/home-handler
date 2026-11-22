@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>home-handler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#B3CCC2;--surface:#FFFFFF;--raised:#E3ECE8;--line:#9DB8AD;--ink:#121E24;--mute:#33444A;
+  --accent:#1F4F48;--on-accent:#FFFFFF;--selected:#335A54;--harbour:#2A4F5F;--rose:#7A2E43;
+  --ok:#1F4F48;--warn:#574805;--bad:#8E1F31;--blush:#E3ACA4;--on-blush:#3E1C26;--apple:#D8DC8A;--mist:#8FB3A2;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1E2326;--surface:#293034;--raised:#333B40;--line:#3F494E;--ink:#EDF2EF;--mute:#A7B4B1;
+  --accent:#8CBDB5;--on-accent:#12201E;--selected:#8CBDB5;--harbour:#8FB3C2;--rose:#EAC3BD;
+  --ok:#8CBDB5;--warn:#F5D76E;--bad:#FF9AA5;--blush:#E6BCB6;--on-blush:#3E1C26;--apple:#D3D69A;--mist:#A3BBAE;}}
+:root[data-theme="dark"]{
+  --bg:#1E2326;--surface:#293034;--raised:#333B40;--line:#3F494E;--ink:#EDF2EF;--mute:#A7B4B1;
+  --accent:#8CBDB5;--on-accent:#12201E;--selected:#8CBDB5;--harbour:#8FB3C2;--rose:#EAC3BD;
+  --ok:#8CBDB5;--warn:#F5D76E;--bad:#FF9AA5;--blush:#E6BCB6;--on-blush:#3E1C26;--apple:#D3D69A;--mist:#A3BBAE;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Manrope,system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 64px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font:800 26px/1.1 Manrope;letter-spacing:-.02em;margin:0}
+.sub{color:var(--mute);font-size:13px}
+.counts{display:flex;gap:10px}
+.count{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 14px;min-width:92px}
+.count b{display:block;font:800 30px/1 Syne,sans-serif}
+.count span{font-size:12px;color:var(--mute)}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+h2{font:800 17px/1.2 Manrope;letter-spacing:-.01em;margin:0 0 10px}
+.empty{color:var(--mute);font-style:italic}
+.item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.item .body{flex:1;min-width:0}
+.item .t{font-weight:600}
+.item .m{color:var(--mute);font-size:12.5px}
+.chip{font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;white-space:nowrap;border:1px solid currentColor}
+.s3{color:var(--bad)}.s2{color:var(--warn)}.s1{color:var(--harbour)}.s0{color:var(--mute)}
+.lbl{background:var(--raised);color:var(--ink);border-color:var(--line)}
+button{font:600 13px Manrope;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);padding:6px 12px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+.today h3{font:800 14px Manrope;margin:12px 0 4px;color:var(--harbour)}
+.today ul{margin:0;padding-left:18px}
+.headline{font:800 19px/1.3 Manrope;letter-spacing:-.01em}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-top:1px solid var(--line)}
+th{color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto}
+.filters{display:flex;gap:6px;margin-bottom:8px}
+.filters button{background:var(--raised);color:var(--ink);border-color:var(--line)}
+.filters button.on{background:var(--selected);color:var(--on-accent);border-color:var(--selected)}
+.reason{font-size:12.5px;color:var(--rose)}
+@media (max-width:560px){.counts{width:100%}.count{flex:1;min-width:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>House agent</h1><div class="sub" id="updated">Loading…</div></div>
+    <div class="counts">
+      <div class="count"><b id="c-wait">–</b><span>need you</span></div>
+      <div class="count"><b id="c-open">–</b><span>spotted</span></div>
+      <div class="count"><b id="c-loose">–</b><span>loose ends</span></div>
+    </div>
+  </header>
+  <nav><a href="#waiting">Waiting on you</a><a href="#today">Today</a><a href="#spotted">Spotted</a><a href="#watchers">Watchers</a><a href="#history">History</a></nav>
+
+  <section id="waiting"><h2>Waiting on you</h2><div id="waiting-list"></div></section>
+  <section id="today" class="today"><h2>Today</h2><div id="today-body"></div></section>
+  <section id="spotted"><h2>Spotted</h2><div id="open-list"></div></section>
+  <section id="watchers"><h2>Watchers</h2><div class="scroll"><table id="watch-table"></table></div>
+    <h3 style="font:800 14px Manrope;margin:14px 0 4px">What it would have caught (last 10 days)</h3><div id="replay"></div></section>
+  <section id="history"><h2>History</h2>
+    <div class="filters"><button data-f="all" class="on">All</button><button data-f="watcher">Watchers</button><button data-f="loose_ends">Loose Ends</button></div>
+    <div id="history-list"></div></section>
+</div>
+<script>
+const SEV = ["info","notice","warn","urgent"];
+const LBL = {can_do:"agent can do", needs_bae:"needs you", stale:"stale"};
+let DATA = null, FILTER = "all";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const when = ts => ts ? new Date(ts*1000).toLocaleString("en-AU",{weekday:"short",day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}) : "";
+function item(i, actions){
+  const chip = i.source === "loose_ends"
+    ? (i.sort_label ? `<span class="chip lbl">${LBL[i.sort_label]}</span>` : `<span class="chip lbl">loose end</span>`)
+    : `<span class="chip s${i.severity}">${SEV[i.severity]}</span>`;
+  const meta = i.source === "loose_ends"
+    ? [i.detail.area, i.detail.priority ? "P"+i.detail.priority : ""].filter(Boolean).join(" · ")
+    : `${esc(i.watcher)} · ${i.count}× · last ${when(i.last_seen)}`;
+  const btns = actions ? (["done","closed"].includes(i.status)
+      ? `<button class="ghost" onclick="act(${i.id},'reopen',this)">Reopen</button>`
+      : `<button onclick="act(${i.id},'done',this)">Done</button>`) : "";
+  return `<div class="item">${chip}<div class="body"><div class="t">${esc(i.title)}</div>
+    <div class="m">${esc(meta)}${["done","closed"].includes(i.status) ? " · "+i.status : ""}</div>
+    ${i.sort_reason ? `<div class="reason">${esc(i.sort_reason)}</div>` : ""}</div>${btns}</div>`;
+}
+function render(){
+  const d = DATA;
+  document.getElementById("c-wait").textContent = d.counts.waiting;
+  document.getElementById("c-open").textContent = d.counts.open;
+  document.getElementById("c-loose").textContent = d.counts.loose_open;
+  document.getElementById("updated").textContent = "Updated " + new Date().toLocaleTimeString("en-AU",{hour:"numeric",minute:"2-digit"});
+  document.getElementById("waiting-list").innerHTML = d.waiting.length ? d.waiting.map(i => item(i,true)).join("") : `<div class="empty">Nothing needs you.</div>`;
+  const t = d.today;
+  document.getElementById("today-body").innerHTML = !t ? `<div class="empty">Quiet day.</div>` :
+    `<div class="headline">${esc(t.headline)}</div><div class="sub">${esc(t.day)}</div>` +
+    (t.sections||[]).map(s => `<h3>${esc(s.title)}</h3><ul>${s.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`).join("");
+  document.getElementById("open-list").innerHTML = d.open.length ? d.open.map(i => item(i,true)).join("") : `<div class="empty">Nothing spotted.</div>`;
+  document.getElementById("watch-table").innerHTML = `<tr><th>Watcher</th><th>Runs</th><th>Fired</th><th>Errors</th><th>Last good run</th></tr>` +
+    d.watchers.map(w => `<tr><td>${esc(w.name)}</td><td>${w.runs}</td><td>${w.fires}</td><td class="${w.errors?'s3':''}">${w.errors}</td><td>${when(w.last_ok)}</td></tr>`).join("");
+  document.getElementById("replay").innerHTML = d.replay.length ? d.replay.map(r => `<div class="item"><span class="chip lbl">${esc(r.watcher)}</span><div class="body"><div class="t">${esc(r.title)}</div><div class="m">${when(r.ts)}</div></div></div>`).join("") : `<div class="empty">No replay yet.</div>`;
+  const h = d.history.filter(i => FILTER === "all" || i.source === FILTER);
+  document.getElementById("history-list").innerHTML = h.length ? h.map(i => item(i,true)).join("") : `<div class="empty">Nothing yet.</div>`;
+}
+async function load(){
+  try { DATA = await (await fetch("/api/state",{cache:"no-store"})).json(); render(); }
+  catch(e){ document.getElementById("updated").textContent = "Couldn't load: " + e; }
+}
+async function act(id, action, btn){
+  btn.disabled = true;
+  const r = await fetch(`/api/incident/${id}/${action}`, {method:"POST", headers:{"X-Requested-With":"home_handler","Content-Type":"application/json"}, body:"{}"});
+  if (!r.ok) { btn.disabled = false; alert("That didn't work (" + r.status + ")"); return; }
+  load();
+}
+document.querySelectorAll(".filters button").forEach(b => b.onclick = () => {
+  FILTER = b.dataset.f; document.querySelectorAll(".filters button").forEach(x => x.classList.toggle("on", x === b)); render();
+});
+load(); setInterval(load, 60000);
+</script>
+</body>
+</html>

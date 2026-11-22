@@ -1,0 +1,9 @@
+[Unit]
+Description=House agent evening note (one push to your phone when something happened)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/home-handler
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 -m home_handler evening
+TimeoutStartSec=15min

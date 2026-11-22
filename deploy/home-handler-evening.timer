@@ -1,0 +1,10 @@
+[Unit]
+Description=House agent evening note: 18:45, then every 30 min until 23:00 (no-op once sent)
+
+[Timer]
+OnCalendar=*-*-* 18:45:00 Australia/Melbourne
+OnCalendar=*-*-* 19..22:15,45:00 Australia/Melbourne
+Persistent=false
+
+[Install]
+WantedBy=timers.target
